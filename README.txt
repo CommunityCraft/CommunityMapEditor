@@ -1,1 +1,1 @@
-Ceci est un �diteur de map fais pour le jeu CommunityGame.
+﻿Ceci est un éditeur de map fais pour le jeu CommunityGame.
