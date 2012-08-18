@@ -1,0 +1,1 @@
+Ceci est un éditeur de map fais pour le jeu CommunityGame.
