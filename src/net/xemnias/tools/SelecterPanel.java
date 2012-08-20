@@ -27,8 +27,8 @@ public class SelecterPanel extends JPanel
 	public SelecterPanel(String string) 
 	{
 		try {
-			selecter = ImageIO.read(new File("data/tiles/"+string));
-			path = "data/tiles/"+string;
+			selecter = ImageIO.read(SelecterPanel.class.getResource(string));
+			path = string;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -56,7 +56,7 @@ public class SelecterPanel extends JPanel
 				{
 					
 					try {
-						BufferedImage buff = ImageIO.read(new File(path));
+						BufferedImage buff = ImageIO.read(SelecterPanel.class.getResource(path));
 						selectedCase = actualCase;
 						selectedSprite = buff.getSubimage(actualCase.x, actualCase.y, actualCase.width, actualCase.height);
 					} catch (IOException e) {
