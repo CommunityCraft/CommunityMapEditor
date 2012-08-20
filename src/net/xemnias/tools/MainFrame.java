@@ -12,7 +12,7 @@ public class MainFrame extends JFrame
 	public CommunityMapEditor parent;
 	
 	public MainPanel mainPanel = new MainPanel(new BorderLayout());
-	public LeftPanel leftPanel = new LeftPanel(new FlowLayout());
+	public LeftPanel leftPanel = new LeftPanel(new FlowLayout(), this);
 	public RightPanel rightPanel = new RightPanel(new FlowLayout());
 	
 	public JSplitPane splitPane = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT, leftPanel, rightPanel);
