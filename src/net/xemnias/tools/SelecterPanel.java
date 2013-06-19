@@ -15,28 +15,35 @@ import javax.swing.JPanel;
 
 public class SelecterPanel extends JPanel 
 {
-	Image selecter;
-	private String path;
+	private static final long serialVersionUID = 1L;
+	Image[] selecter;
 	public Image selectedSprite = null;
 	private CaseSelecter[][] cases;
+	public int id=-1;
 	
 	private int mouseX, mouseY;
 	private CaseSelecter actualCase;
 	private CaseSelecter selectedCase;
+	public String type;
 	
-	public SelecterPanel(String string) 
+	public SelecterPanel(final String[] string, String t) 
 	{
+		type = t;
+		selecter = new Image[string.length];
 		try {
-			selecter = ImageIO.read(SelecterPanel.class.getResource(string));
-			path = string;
+			for(int x = 0; x < selecter.length; x++)
+			{
+				System.out.println(System.getProperty("user.dir")+File.separator+string[x]);
+				selecter[x] = ImageIO.read(new File(System.getProperty("user.dir")+File.separator+string[x]));
+			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		
-		cases = new CaseSelecter[8][8];
+		cases = new CaseSelecter[8][16];
 		for(int x = 0; x < 8; x++)
 		{
-			for(int y = 0; y < 8; y++)
+			for(int y = 0; y < 16; y++)
 			{
 				cases[x][y] = new CaseSelecter(x*32, y*32, 32, 32);
 			}
@@ -54,15 +61,30 @@ public class SelecterPanel extends JPanel
 			{
 				if(isClickOnImage(arg0))
 				{
-					
+
 					try {
-						BufferedImage buff = ImageIO.read(SelecterPanel.class.getResource(path));
+
+								id = getIdByCoord(actualCase.x/32, actualCase.y/32);
+								System.out.println(id);
+						BufferedImage buff = null;
+						if(actualCase.y < 8*32)
+						{
+							buff = ImageIO.read(new File(System.getProperty("user.dir")+File.separator+string[0]));
+							
+							selectedSprite = buff.getSubimage(actualCase.x, actualCase.y, actualCase.width, actualCase.height);
+						
+						}
+						else if(actualCase.y >= 8*32)
+						{
+							buff = ImageIO.read(new File(System.getProperty("user.dir")+File.separator+string[1]));	
+							selectedSprite = buff.getSubimage(actualCase.x, actualCase.y-256, actualCase.width, actualCase.height);
+							
+						}
 						selectedCase = actualCase;
-						selectedSprite = buff.getSubimage(actualCase.x, actualCase.y, actualCase.width, actualCase.height);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
-
+					System.out.println(id);
 					repaint();
 				}
 			}
@@ -86,7 +108,7 @@ public class SelecterPanel extends JPanel
 	
 	private boolean isClickOnImage(MouseEvent arg0)
 	{
-		if(arg0.getX()> 0 && arg0.getX() < 256 && arg0.getY()> 0 && arg0.getY() < 256)
+		if(arg0.getX()> 0 && arg0.getX() < 512 && arg0.getY()> 0 && arg0.getY() < 512)
 			return true;
 		return false;
 	}
@@ -95,11 +117,15 @@ public class SelecterPanel extends JPanel
 	{
 		g.setColor(Color.white);
 		g.fillRect(0, 0, this.getWidth(), this.getHeight());
-		g.drawImage(selecter, 0, 0, this);
+		for(int i = 0; i < selecter.length; i++)
+		{
+
+			g.drawImage(selecter[i], 0, 256*i, this);
+		}
 		
 		for(int x = 0; x < 8; x++)
 		{
-			for(int y = 0; y < 8; y++)
+			for(int y = 0; y < 16; y++)
 			{
 				if(mouseX> cases[x][y].x && mouseX < cases[x][y].x+32)
 				{
@@ -115,10 +141,13 @@ public class SelecterPanel extends JPanel
 		{
 			selectedCase.render(g);
 			
-			g.drawImage(selectedSprite, 0, 300, this);
+			g.drawImage(selectedSprite, 0, 520, this);
 		}
 	}
 	
-	
+	public int getIdByCoord(int x, int y)
+	{
+		return x+(8*y);
+	}
 
 }
